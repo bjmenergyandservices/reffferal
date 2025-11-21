@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REFERALLS Marketplace</title>
+<link rel="stylesheet" href="./assets/css/index.css">
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navbar-min">
+      <h1>REFERALLS</h1>
+      <div class="access">
+        <button onclick="window.location.href='upload.html'">+ Post Your Listing</button>
+        <span class="profile-icon" title="Profile" onclick="goToDashboard()">👤</span>
+      </div>
+  </div>
+</div>
+
+<div class="search-section">
+  <div class="search-min">
+    <select id="categorySelect">
+      <option value="">All Categories</option>
+      <option value="House">Houses</option>
+      <option value="Car">Cars</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="I am looking for...">
+    <button id="searchBtn">Search</button>
+  </div>
+</div>
+
+<div class="categories">
+  <div class="category-card" onclick="filterCategory('House')">
+    <img src="images/house.png" alt="House">
+    <h3>Houses</h3>
+  </div>
+  <div class="category-card" onclick="filterCategory('Car')">
+    <img src="images/car.jpg" alt="Car">
+    <h3>Cars</h3>
+  </div>
+</div>
+
+<h2 style="text-align:center;">Trending Listings</h2>
+<div class="listings" id="listingsContainer"></div>
+
+<footer>© 2025 REFERALLS. All Rights Reserved.</footer>
+
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+// Dashboard/Profile button
+function goToDashboard() {
+  const user = auth.currentUser;
+  if (user) window.location.href = "dashboard.html";
+  else window.location.href = "login.html";
+}
+
+// Fetch listings from Firestore
+async function fetchListings(category = "", searchText = "") {
+  const listingsCol = collection(db, "listings");
+  let q;
+
+  if (category && searchText) {
+    q = query(listingsCol, where("category", "==", category));
+    // Simple client-side filter for search text
+  } else if (category) {
+    q = query(listingsCol, where("category", "==", category));
+  } else {
+    q = query(listingsCol, orderBy("createdAt", "desc"));
+  }
+
+  const snapshot = await getDocs(q);
+  let listings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  // Filter client-side by search text if needed
+  if (searchText) {
+    const lower = searchText.toLowerCase();
+    listings = listings.filter(l => 
+      l.title.toLowerCase().includes(lower) ||
+      l.description.toLowerCase().includes(lower)
+    );
+  }
+
+  displayListings(listings);
+}
+
+// Display listings
+function displayListings(listings) {
+  const container = document.getElementById("listingsContainer");
+  container.innerHTML = "";
+
+  if (listings.length === 0) {
+    container.innerHTML = "<p style='text-align:center;'>No listings found.</p>";
+    return;
+  }
+
+  listings.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "listing";
+    div.innerHTML = `
+      <img src="${item.imageURL}" alt="${item.title}" style="cursor:pointer;">
+      <div class="details">
+        <h4>${item.title}</h4>
+        <p>${item.category}</p>
+        <p>₦${item.price}</p>
+        <p>${item.description}</p>
+      </div>
+    `;
+    div.addEventListener("click", () => {
+      localStorage.setItem("selectedListing", JSON.stringify(item));
+      window.location.href = "details.html";
+    });
+    container.appendChild(div);
+  });
+}
+
+// Filter by category
+function filterCategory(cat) {
+  document.getElementById("categorySelect").value = cat;
+  const searchText = document.getElementById("searchInput").value.trim();
+  fetchListings(cat, searchText);
+}
+
+// Search button
+document.getElementById("searchBtn").addEventListener("click", () => {
+  const cat = document.getElementById("categorySelect").value;
+  const text = document.getElementById("searchInput").value.trim();
+  fetchListings(cat, text);
+});
+
+// Initial load
+fetchListings();
+
+window.addEventListener("scroll", function(){
+  const header = document.querySelector(".navbar");
+  header.classList.toggle("sticky", window.scrollY > 0);
+});
+
+console.log("Firebase connected on index.html");
+</script>
+
+</body>
+</html>
