@@ -90,6 +90,20 @@
     <button class="logout-btn" onclick="logout()">Logout</button>
     <p><a href="index.html">← Back to Home</a></p>
   </div>
+  <script type="module">
+import { auth, db } from "./firebase.js";
+
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    alert("You must log in first to view the dashboard.");
+    window.location.href = "login.html";
+  } else {
+    console.log("User logged in:", user.email);
+    // Now you can safely fetch user-specific data from Firestore
+  }
+});
+</script>
+
 
   <script>
     
@@ -129,4 +143,5 @@
 
 </body>
 </html>
+
 
