@@ -1,0 +1,98 @@
+.log{
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.405), rgba(0, 0, 0, 0.589)), url(../img/access/bailey-anselme-Bkp3gLygyeA-unsplash.jpg);
+      background-position: center;
+      background-size: cover;
+}
+.reg{
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.478), rgba(0, 0, 0, 0.589)), url(../img/access/etienne-beauregard-riverin-B0aCvAVSX8E-unsplash.jpg);
+      background-position: center;
+      background-size: cover;
+}
+
+.container {
+      background: rgba(74, 73, 73, 0.686);
+      padding: 30px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.container h2 {
+      text-align: center;
+      color: #fdfffd;
+      font-size: 2rem;
+      text-transform: uppercase;
+}
+
+.container input {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+}
+
+.container button {
+      width: 70%;
+      padding: 10px;
+      margin: 5px 16%;
+      background: #feae1ae0;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+}
+.container button:hover{
+    background: #fe991d;
+    animation: login 2s;
+}
+@keyframes login{
+    10%{
+        transform: translateY(2px);
+    }
+    15%{
+        transform: translateY(7px);
+    }
+    22%{
+        transform: translateY(-2px);
+    }
+    25%{
+        transform: scaleY(-7px);
+    }
+    27%{
+        transform: scaleY(-10px);
+    }
+    30%{
+        transform: translateY(2px);
+    }
+}
+
+
+
+.container p {
+      text-align: center;
+      color: white;
+}
+
+.container a {
+      color: #fee01d;
+      text-decoration: none;
+}
+.container a:hover {
+      color: #fe991d;
+      text-decoration: underline;
+}
